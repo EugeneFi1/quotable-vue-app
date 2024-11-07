@@ -1,5 +1,7 @@
 <template>
-  <div v-if="serverError">Server Error</div>
+  <div v-if="serverError">
+    <i class="pi pi-info-circle" style="font-size: 2.5rem"> Server Error. Please reload page</i>
+  </div>
   <div v-else>
     <div class="btn-section">
       <Button
@@ -77,6 +79,7 @@ updateQoute()
   display: flex;
   justify-self: flex-end;
   gap: 10px;
+  margin-bottom: 10px;
 }
 
 .loader {
