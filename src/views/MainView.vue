@@ -1,5 +1,5 @@
 <template>
-  <InfoComponent v-if="serverError" :text="'Server Error. Please reload page'" />
+  <InfoComponent v-if="serverError" :text="'Server Error'" />
   <div v-else>
     <div class="main-view__btn-section">
       <Button
@@ -22,6 +22,7 @@ import Button from 'primevue/button'
 import { useToast } from 'primevue/usetoast'
 import type { Qoute } from '../models/qoute.model.ts'
 import InfoComponent from '../components/InfoComponent.vue'
+import { getQoute } from '../services/api.service.ts'
 
 import { qouteStore } from '../store/qoute.store.ts'
 
@@ -36,21 +37,13 @@ function showNotification(type: 'success' | 'error', msg: string): void {
 
 function updateQoute(): void {
   isLoading.value = true
-  fetch('https://api.quotable.io/quotes/random', {
-    method: 'GET',
-  })
-    .then((response) => {
-      if (response.ok) {
-        serverError.value = false
-        return response.json()
-      }
-      throw new Error()
-    })
+  serverError.value = false
+
+  getQoute()
     .then((data) => {
-      const { author, content } = data[0]
       const qouteInfo = {
-        author,
-        content,
+        author: data.author,
+        content: data.content,
       }
       qoute.value = qouteInfo
       qouteStore.addQoute(qouteInfo)
