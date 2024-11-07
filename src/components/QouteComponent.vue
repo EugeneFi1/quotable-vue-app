@@ -11,7 +11,7 @@
   <Card v-else>
     <template #title>
       <div class="qoute-component__title">
-        {{ author }}
+        {{ author! }}
         <Button
           v-tooltip.bottom="'Copy to clipboard'"
           icon="pi pi-copy"
@@ -22,7 +22,7 @@
     </template>
     <template #content>
       <p class="m-0">
-        {{ content }}
+        {{ content! }}
       </p>
     </template>
   </Card>
