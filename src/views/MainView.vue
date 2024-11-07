@@ -25,16 +25,23 @@ import { ref } from 'vue'
 import QouteComponent from '../components/QouteComponent.vue'
 import Button from 'primevue/button'
 import copy from 'copy-to-clipboard'
+import { useToast } from 'primevue/usetoast'
 
+const toast = useToast()
 const auth = ref(null)
 const qoute = ref(null)
 const serverError = ref(false)
 
-function copyQouteToClipboard() {
-  copy(qoute.value)
+function showNotification(type: 'success' | 'error', msg: string): void {
+  toast.add({ severity: type, summary: msg, life: 3000 })
 }
 
-function updateQoute() {
+function copyQouteToClipboard(): void {
+  copy(qoute.value)
+  showNotification('success', 'Copied to clipboard')
+}
+
+function updateQoute(): void {
   fetch('https://api.quotable.io/quotes/random', {
     method: 'GET',
   })
@@ -52,6 +59,7 @@ function updateQoute() {
     })
     .catch((error) => {
       serverError.value = true
+      showNotification('error', 'Server error')
     })
 }
 
