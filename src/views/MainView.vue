@@ -16,7 +16,8 @@
       />
     </div>
 
-    <QouteComponent :author="auth" :qoute="qoute" />
+    <QouteComponent v-if="isLoading" :loading="true" />
+    <QouteComponent v-else :author="auth" :qoute="qoute" />
   </div>
 </template>
 
@@ -31,6 +32,7 @@ const toast = useToast()
 const auth = ref(null)
 const qoute = ref(null)
 const serverError = ref(false)
+const isLoading = ref(true)
 
 function showNotification(type: 'success' | 'error', msg: string): void {
   toast.add({ severity: type, summary: msg, life: 3000 })
@@ -42,6 +44,7 @@ function copyQouteToClipboard(): void {
 }
 
 function updateQoute(): void {
+  isLoading.value = true
   fetch('https://api.quotable.io/quotes/random', {
     method: 'GET',
   })
@@ -61,6 +64,9 @@ function updateQoute(): void {
       serverError.value = true
       showNotification('error', 'Server error')
     })
+    .finally(() => {
+      isLoading.value = false
+    })
 }
 
 updateQoute()
@@ -71,5 +77,12 @@ updateQoute()
   display: flex;
   justify-self: flex-end;
   gap: 10px;
+}
+
+.loader {
+  height: 50px !important;
+  right: 50%;
+  left: 50%;
+  top: 50px;
 }
 </style>
