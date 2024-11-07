@@ -1,5 +1,8 @@
 export interface Qoute {
-  author: string
-  qoute: string
+  author?: string
+  content?: string
+}
+
+export interface QouteComponentProps extends Qoute {
   loading?: boolean
 }

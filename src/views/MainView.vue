@@ -1,15 +1,7 @@
 <template>
-  <div v-if="serverError">
-    <i class="pi pi-info-circle" style="font-size: 2.5rem"> Server Error. Please reload page</i>
-  </div>
+  <InfoComponent v-if="serverError" :text="'Server Error. Please reload page'" />
   <div v-else>
-    <div class="btn-section">
-      <Button
-        v-tooltip.bottom="'Copy to clipboard'"
-        icon="pi pi-copy"
-        severity="secondary"
-        @click="copyQouteToClipboard()"
-      />
+    <div class="main-view__btn-section">
       <Button
         v-tooltip.bottom="'Update quote'"
         icon="pi pi-refresh"
@@ -19,7 +11,7 @@
     </div>
 
     <QouteComponent v-if="isLoading" :loading="true" />
-    <QouteComponent v-else :author="auth" :qoute="qoute" />
+    <QouteComponent v-else :author="qoute.author" :content="qoute.content" />
   </div>
 </template>
 
@@ -27,22 +19,19 @@
 import { ref } from 'vue'
 import QouteComponent from '../components/QouteComponent.vue'
 import Button from 'primevue/button'
-import copy from 'copy-to-clipboard'
 import { useToast } from 'primevue/usetoast'
+import type { Qoute } from '../models/qoute.model.ts'
+import InfoComponent from '../components/InfoComponent.vue'
+
+import { qouteStore } from '../store/qoute.store.ts'
 
 const toast = useToast()
-const auth = ref(null)
-const qoute = ref(null)
+const qoute = ref<Qoute>(null)
 const serverError = ref(false)
 const isLoading = ref(true)
 
 function showNotification(type: 'success' | 'error', msg: string): void {
   toast.add({ severity: type, summary: msg, life: 3000 })
-}
-
-function copyQouteToClipboard(): void {
-  copy(qoute.value)
-  showNotification('success', 'Copied to clipboard')
 }
 
 function updateQoute(): void {
@@ -59,8 +48,12 @@ function updateQoute(): void {
     })
     .then((data) => {
       const { author, content } = data[0]
-      auth.value = author
-      qoute.value = content
+      const qouteInfo = {
+        author,
+        content,
+      }
+      qoute.value = qouteInfo
+      qouteStore.addQoute(qouteInfo)
     })
     .catch((error) => {
       serverError.value = true
@@ -75,17 +68,10 @@ updateQoute()
 </script>
 
 <style>
-.btn-section {
+.main-view__btn-section {
   display: flex;
   justify-self: flex-end;
   gap: 10px;
   margin-bottom: 10px;
-}
-
-.loader {
-  height: 50px !important;
-  right: 50%;
-  left: 50%;
-  top: 50px;
 }
 </style>
