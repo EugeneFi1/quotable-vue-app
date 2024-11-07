@@ -23,6 +23,7 @@ import { useToast } from 'primevue/usetoast'
 import type { Qoute } from '../models/qoute.model.ts'
 import InfoComponent from '../components/InfoComponent.vue'
 import { getQoute } from '../services/api.service.ts'
+import { TOAST_LIFE } from '../utils/toast.const.ts'
 
 import { qouteStore } from '../store/qoute.store.ts'
 
@@ -30,10 +31,6 @@ const toast = useToast()
 const qoute = ref<Qoute>(null)
 const serverError = ref(false)
 const isLoading = ref(true)
-
-function showNotification(type: 'success' | 'error', msg: string): void {
-  toast.add({ severity: type, summary: msg, life: 3000 })
-}
 
 function updateQoute(): void {
   isLoading.value = true
@@ -50,7 +47,7 @@ function updateQoute(): void {
     })
     .catch((error) => {
       serverError.value = true
-      showNotification('error', 'Server error')
+      toast.add({ severity: 'error', summary: 'Server error', life: TOAST_LIFE })
     })
     .finally(() => {
       isLoading.value = false

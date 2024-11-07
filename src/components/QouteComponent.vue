@@ -11,7 +11,7 @@
   <Card v-else>
     <template #title>
       <div class="qoute-component__title">
-        {{ author! }}
+        {{ author }}
         <Button
           v-tooltip.bottom="'Copy to clipboard'"
           icon="pi pi-copy"
@@ -22,7 +22,7 @@
     </template>
     <template #content>
       <p class="m-0">
-        {{ content! }}
+        {{ content }}
       </p>
     </template>
   </Card>
@@ -34,6 +34,7 @@ import type { QouteComponentProps } from '../models/qoute.model.ts'
 import Skeleton from 'primevue/skeleton'
 import Button from 'primevue/button'
 import copy from 'copy-to-clipboard'
+import { TOAST_LIFE } from '../utils/toast.const.ts'
 import { useToast } from 'primevue/usetoast'
 
 const props = defineProps<QouteComponentProps>()
@@ -42,7 +43,7 @@ const toast = useToast()
 
 function copyQouteToClipboard(): void {
   copy(props.content)
-  toast.add({ severity: 'success', summary: 'Copied to clipboard', life: 3000 })
+  toast.add({ severity: 'success', summary: 'Copied to clipboard', life: TOAST_LIFE })
 }
 </script>
 
