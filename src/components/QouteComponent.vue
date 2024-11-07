@@ -10,7 +10,7 @@ const props = defineProps<Qoute>()
     <template #title><Skeleton height="20px" /></template>
     <template #content>
       <p class="m-0">
-        <Skeleton height="40px" />
+        <Skeleton height="20px" />
       </p>
     </template>
   </Card>
