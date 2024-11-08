@@ -5,4 +5,5 @@ Application for generating quotes developed with Vue 3 in Vite. Quote can be cop
 # Start develop
 
 `npm i`
+
 `npm run dev`
